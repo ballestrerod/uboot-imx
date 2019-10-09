@@ -1,0 +1,14 @@
+if TARGET_IMX8M_ENOBU
+
+config SYS_BOARD
+	default "imx8m_enobu"
+
+config SYS_VENDOR
+	default "leonardo"
+
+config SYS_CONFIG_NAME
+	default "imx8m_enobu"
+
+source "board/freescale/common/Kconfig"
+
+endif
