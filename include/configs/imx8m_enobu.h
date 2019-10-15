@@ -104,12 +104,12 @@
  */
 #define JAILHOUSE_ENV \
 	"jh_clk= \0 " \
-	"jh_mmcboot=setenv fdt_file imx8m-var-dart-root.dtb; " \
+	"jh_mmcboot=setenv fdt_file imx8m-enobu-root.dtb; " \
 		"setenv jh_clk clk_ignore_unused; " \
 			   "if run loadimage; then " \
 				   "run mmcboot; " \
 			   "else run jh_netboot; fi; \0" \
-	"jh_netboot=setenv fdt_file imx8m-var-dart-root.dtb; setenv jh_clk clk_ignore_unused; run netboot; \0 "
+	"jh_netboot=setenv fdt_file imx8m-enobu-root.dtb; setenv jh_clk clk_ignore_unused; run netboot; \0 "
 
 /* Initial environment variables */
 #define CONFIG_EXTRA_ENV_SETTINGS		\
@@ -167,9 +167,9 @@
 	"findfdt=" \
 		"if test $fdt_file = undefined; then " \
 			"if gpio input 12; then " \
-				"setenv fdt_file fsl-imx8mq-var-dart-cb12.dtb; " \
+				"setenv fdt_file fsl-imx8mq-enobu-cb12.dtb; " \
 			"else " \
-				"setenv fdt_file fsl-imx8mq-var-dart.dtb;" \
+				"setenv fdt_file fsl-imx8mq-enobu.dtb;" \
 			"fi; " \
 		"fi; \0" \
 	"loadfdt=run findfdt; " \
