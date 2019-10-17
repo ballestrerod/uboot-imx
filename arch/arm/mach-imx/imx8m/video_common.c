@@ -652,7 +652,6 @@ void *video_hw_init(void)
 {
 	void *fb;
 	int encoding = 1;
-	int ret;
 
 	debug("%s()\n", __func__);
 
@@ -677,11 +676,13 @@ void *video_hw_init(void)
 
 	imx8m_create_color_bar((void *)((uint64_t) fb), &gmode);
 
-	ret = imx8_hdmi_enable(encoding, &gmode); /* may change gmode */
+#ifdef CONFIG_VIDEO_IMX8_HDMI
+	int ret = imx8_hdmi_enable(encoding, &gmode); /* may change gmode */
 	if (ret) {
 		printf("HDMI enable failed!\n");
 		return NULL;
 	}
+#endif
 
 	/* start dccs */
 	imx8m_display_init((uint64_t) fb, encoding, &gmode);
