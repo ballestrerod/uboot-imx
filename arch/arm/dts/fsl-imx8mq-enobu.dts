@@ -68,7 +68,7 @@
 				MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
 				MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
 				MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
-				MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9		0x19
+				MX8MQ_IOMUXC_SAI5_RXD3_GPIO3_IO24		0x7
 			>;
 		};
 
@@ -76,6 +76,30 @@
 			fsl,pins = <
 				MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
 				MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
+			>;
+		};
+
+                /* all other devices */
+		pinctrl_i2c2: i2c2grp {
+			fsl,pins = <
+				MX8MQ_IOMUXC_I2C2_SCL_I2C2_SCL			0x4000007f
+				MX8MQ_IOMUXC_I2C2_SDA_I2C2_SDA			0x4000007f
+			>;
+		};
+
+                /* NOT used actually */
+		pinctrl_i2c3: i2c3grp {
+			fsl,pins = <
+				MX8MQ_IOMUXC_I2C3_SCL_I2C3_SCL			0x4000007f
+				MX8MQ_IOMUXC_I2C3_SDA_I2C3_SDA			0x4000007f
+			>;
+		};
+
+                /* FPGA dedicated I2C */
+		pinctrl_i2c4: i2c4grp {
+			fsl,pins = <
+				MX8MQ_IOMUXC_I2C4_SCL_I2C4_SCL			0x4000007f
+				MX8MQ_IOMUXC_I2C4_SDA_I2C4_SDA			0x4000007f
 			>;
 		};
 
@@ -192,22 +216,19 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_fec1>;
 	phy-mode = "rgmii";
-	phy-handle = <&ethphy0>;
-	fsl,magic-packet;
+//	phy-handle = <&ethphy0>;
 	status = "okay";
-
-	mdio {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		ethphy0: ethernet-phy@0 {
-			compatible = "ethernet-phy-ieee802.3-c22";
-			reg = <0>;
-			at803x,led-act-blind-workaround;
-			at803x,eee-disabled;
-		};
-	};
+//
+//	mdio {
+//		#address-cells = <1>;
+//		#size-cells = <0>;
+//		
+//                ethphy0: ethernet-phy@10 {
+//			reg = <10>;
+//		};
+//	};
 };
+
 
 &i2c1 {
 	clock-frequency = <100000>;
@@ -300,7 +321,37 @@
 			};
 		};
 	};
+};
 
+
+&i2c2 {
+	clock-frequency = <100000>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c2>;
+	status = "okay";
+};
+
+
+&i2c3 {
+	clock-frequency = <100000>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c3>;
+	status = "okay";
+};
+
+/* FPGA */
+&i2c4 {
+	clock-frequency = <100000>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c4>;
+	status = "okay";
+
+        /* TODO popolare con
+
+           - PI7C9X2G404  pcie hub
+           - LCMXO3       fpga (backup) 
+           
+        */
 };
 
 /* console */

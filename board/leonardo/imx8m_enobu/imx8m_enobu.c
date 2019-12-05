@@ -85,10 +85,11 @@ int ft_board_setup(void *blob, bd_t *bd)
 }
 #endif
 
+
+
 #ifdef CONFIG_FEC_MXC
 static iomux_v3_cfg_t const fec_pads[] = {
-	IMX8MQ_PAD_GPIO1_IO08__GPIO1_IO8 | MUX_PAD_CTRL(NO_PAD_CTRL),
-	IMX8MQ_PAD_GPIO1_IO09__GPIO1_IO9 | MUX_PAD_CTRL(NO_PAD_CTRL),
+	IMX8MQ_PAD_SAI5_RXD3__GPIO3_IO24 | MUX_PAD_CTRL(NO_PAD_CTRL),
 };
 
 static int setup_mac(struct var_eeprom *eeprom)
@@ -115,15 +116,16 @@ static void setup_iomux_fec(void)
 	imx_iomux_v3_setup_multiple_pads(fec_pads, ARRAY_SIZE(fec_pads));
 
 	/* Power-up ethernet PHY */
-	gpio_request(IMX_GPIO_NR(1, 8), "phy_pwr");
-	gpio_direction_output(IMX_GPIO_NR(1, 8), 1);
-	mdelay(10);
+//	gpio_request(IMX_GPIO_NR(1, 8), "phy_pwr");
+//	gpio_direction_output(IMX_GPIO_NR(1, 8), 1);
+//	mdelay(10);
 
 	/* Reset ethernet PHY */
-	gpio_request(IMX_GPIO_NR(1, 9), "phy_rst");
-	gpio_direction_output(IMX_GPIO_NR(1, 9), 0);
+	gpio_request(IMX_GPIO_NR(3, 24), "phy_rst");
+	gpio_direction_output(IMX_GPIO_NR(3, 24), 0);
 	mdelay(10);
-	gpio_direction_output(IMX_GPIO_NR(1, 9), 1);
+	gpio_direction_output(IMX_GPIO_NR(3, 24), 1);
+        mdelay(100);
 }
 
 static int setup_fec(void)
@@ -140,25 +142,35 @@ static int setup_fec(void)
 	return set_clk_enet(ENET_125MHZ);
 }
 
-#define AR803x_PHY_DEBUG_ADDR_REG	0x1d
-#define AR803x_PHY_DEBUG_DATA_REG	0x1e
 
-#define AR803x_DEBUG_REG_5		0x05
-#define AR803x_DEBUG_REG_0		0x00
 
-int board_phy_config(struct phy_device *phydev)
-{
-	/* Disable RGMII RX clock delay (enabled by default) */
-	phy_write(phydev, MDIO_DEVAD_NONE, AR803x_PHY_DEBUG_ADDR_REG,
-		  AR803x_DEBUG_REG_0);
-	phy_write(phydev, MDIO_DEVAD_NONE, AR803x_PHY_DEBUG_DATA_REG, 0);
 
-	if (phydev->drv->config)
-		phydev->drv->config(phydev);
 
-	return 0;
-}
+
+// #define AR803x_PHY_DEBUG_ADDR_REG	0x1d
+// #define AR803x_PHY_DEBUG_DATA_REG	0x1e
+// 
+// #define AR803x_DEBUG_REG_5		0x05
+// #define AR803x_DEBUG_REG_0		0x00
+// 
+// int board_phy_config(struct phy_device *phydev)
+// {
+// 	/* Disable RGMII RX clock delay (enabled by default) */
+// 	phy_write(phydev, MDIO_DEVAD_NONE, AR803x_PHY_DEBUG_ADDR_REG,
+// 		  AR803x_DEBUG_REG_0);
+// 	phy_write(phydev, MDIO_DEVAD_NONE, AR803x_PHY_DEBUG_DATA_REG, 0);
+// 
+// 	if (phydev->drv->config)
+// 		phydev->drv->config(phydev);
+// 
+// 	return 0;
+// }
+
 #endif
+
+
+
+
 
 int board_init(void)
 {
