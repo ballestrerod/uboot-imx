@@ -89,7 +89,7 @@
 
 #define CONFIG_FEC_MXC
 #define CONFIG_FEC_XCV_TYPE             RGMII
-#define CONFIG_FEC_MXC_PHYADDR          0
+#define CONFIG_FEC_MXC_PHYADDR          0x18
 #define FEC_QUIRK_ENET_MAC
 
 #define CONFIG_PHY_GIGE
@@ -294,6 +294,8 @@
 
 #define CONFIG_MXC_OCOTP
 #define CONFIG_CMD_FUSE
+
+#define CONFIG_SYS_BOOTM_LEN         SZ_256M
 
 /* I2C Configs */
 #define CONFIG_SYS_I2C_SPEED		  100000
