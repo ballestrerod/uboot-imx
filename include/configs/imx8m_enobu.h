@@ -56,7 +56,9 @@
 #define CONFIG_POWER_PFUZE100_I2C_ADDR 0x08
 #endif
 
+#ifndef CONFIG_DM_I2C
 #define CONFIG_SYS_I2C
+#endif
 #define CONFIG_SYS_I2C_MXC_I2C1		/* enable I2C bus 1 */
 #define CONFIG_SYS_I2C_MXC_I2C2		/* enable I2C bus 2 */
 #define CONFIG_SYS_I2C_MXC_I2C3		/* enable I2C bus 3 */
@@ -94,11 +96,6 @@
 
 #define CONFIG_PHY_GIGE
 #define IMX_FEC_BASE			0x30BE0000
-
-/* #define CONFIG_PHYLIB
-#define CONFIG_PHY_ATHEROS
-*/
-
 #endif
 
 
@@ -240,6 +237,7 @@
 
 /* Link Definitions */
 #define CONFIG_LOADADDR			0x40480000
+
 #define CONFIG_SYS_LOAD_ADDR		CONFIG_LOADADDR
 
 #define CONFIG_SYS_INIT_RAM_ADDR        0x40000000
