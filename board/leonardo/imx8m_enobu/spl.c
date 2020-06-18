@@ -79,6 +79,39 @@ struct i2c_pads_info i2c_pad_info3 = {
 	},
 };
 
+
+
+
+struct i2c_pads_info i2c_pad_info2 = {
+	.scl = {
+		.i2c_mode = IMX8MQ_PAD_I2C2_SCL__I2C2_SCL | PC,
+		.gpio_mode = IMX8MQ_PAD_I2C2_SCL__GPIO5_IO16 | PC,
+		.gp = IMX_GPIO_NR(5, 16),
+	},
+	.sda = {
+		.i2c_mode = IMX8MQ_PAD_I2C2_SDA__I2C2_SDA | PC,
+		.gpio_mode = IMX8MQ_PAD_I2C2_SDA__GPIO5_IO17 | PC,
+		.gp = IMX_GPIO_NR(5, 17),
+	},
+};
+
+
+struct i2c_pads_info i2c_pad_info4 = {
+	.scl = {
+		.i2c_mode = IMX8MQ_PAD_I2C4_SCL__I2C4_SCL | PC,
+		.gpio_mode = IMX8MQ_PAD_I2C4_SCL__GPIO5_IO20 | PC,
+		.gp = IMX_GPIO_NR(5, 20),
+	},
+	.sda = {
+		.i2c_mode = IMX8MQ_PAD_I2C4_SDA__I2C4_SDA | PC,
+		.gpio_mode = IMX8MQ_PAD_I2C4_SDA__GPIO5_IO21 | PC,
+		.gp = IMX_GPIO_NR(5, 21),
+	},
+};
+
+
+
+
 #define USDHC2_CD_GPIO	IMX_GPIO_NR(2, 12)
 #define USDHC1_PWR_GPIO IMX_GPIO_NR(2, 10)
 #define USDHC2_PWR_GPIO IMX_GPIO_NR(2, 19)
@@ -350,6 +383,10 @@ void board_init_f(ulong dummy)
 	setup_i2c(2, CONFIG_SYS_I2C_SPEED, 0x7f, &i2c_pad_info3);
 
 	power_init_board();
+
+        /* Added for enobu debug */
+	setup_i2c(1, CONFIG_SYS_I2C_SPEED, 0x7f, &i2c_pad_info2);
+	setup_i2c(3, CONFIG_SYS_I2C_SPEED, 0x7f, &i2c_pad_info4);
 
 	/* DDR initialization */
 	spl_dram_init();

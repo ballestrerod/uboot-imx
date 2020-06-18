@@ -212,6 +212,17 @@
 		"else " \
 			"booti; " \
 		"fi;\0" \
+        "ipaddr=192.168.0.5\0"                  \
+        "netmask=255.255.255.0\0"               \
+        "serverip=192.168.0.15\0"               \
+        "dtb_addr=0x40480000\0"			\
+        "linux_addr=0x404a0000\0"               \
+        "rd_addr=0x444a0000\0"                  \
+        "enobunetboot=" \
+                "tftpboot $dtb_addr fsl-imx8mq-enobu-emmc-wifi-hdmi.dtb; " \
+                "tftpboot $linux_addr Image; " \
+                "tftpboot $rd_addr initramfs.ub; " \
+                "booti $linux_addr $rd_addr $dtb_addr\0" \
 	"splashsourceauto=yes\0" \
 	"splashfile=/boot/splash.bmp\0" \
 	"splashimage=0x43100000\0" \
@@ -230,7 +241,7 @@
 		   "else " \
 			   "if run loadimage; then " \
 				   "run mmcboot; " \
-			   "else run netboot; " \
+			   "else run enobunetboot; " \
 			   "fi; " \
 		   "fi; " \
 	   "else booti ${loadaddr} - ${fdt_addr}; fi"
