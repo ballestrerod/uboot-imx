@@ -769,8 +769,13 @@ int power_init_board(void)
 	/* set SW1B normal voltage to 0.975V */
 	pmic_reg_read(p, PFUZE3000_SW1BVOLT, &reg);
 	reg &= ~0x1f;
-	reg |= PFUZE3000_SW1AB_SETP(975);
+	reg |= PFUZE3000_SW1AB_SETP(9750);
 	pmic_reg_write(p, PFUZE3000_SW1BVOLT, reg);
+
+	/* turn off V33 during standby mode */
+	pmic_reg_read(p, PFUZE3000_V33CTL, &reg);
+	reg |= 0x20;
+	pmic_reg_write(p, PFUZE3000_V33CTL, reg);
 
 	return 0;
 }
