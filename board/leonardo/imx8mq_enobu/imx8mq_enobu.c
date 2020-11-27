@@ -75,8 +75,6 @@ int usb_gadget_handle_interrupts(void)
 }
 
 
-#if 0
-
 #ifdef CONFIG_USB_DWC3
 
 #define USB_PHY_CTRL0			0xF0040
@@ -148,8 +146,6 @@ int board_usb_cleanup(int index, enum usb_init_type init)
 
 	return 0;
 }
-#endif
-
 #endif
 
 

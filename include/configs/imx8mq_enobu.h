@@ -5,8 +5,8 @@
  * SPDX-License-Identifier:	GPL-2.0+
  */
 
-#ifndef __IMX8MQ_VAR_DART_H
-#define __IMX8MQ_VAR_DART_H
+#ifndef __IMX8MQ_ENOBU_H
+#define __IMX8MQ_ENOBU_H
 
 #include <linux/sizes.h>
 #include <asm/arch/imx-regs.h>
@@ -237,18 +237,14 @@
 #ifndef CONFIG_SPL_BUILD
 #define CONFIG_CMD_USB
 #define CONFIG_USB_STORAGE
-
 #define CONFIG_CMD_USB_MASS_STORAGE
 #define CONFIG_USB_GADGET_MASS_STORAGE
 #define CONFIG_USB_FUNCTION_MASS_STORAGE
-
 #define CONFIG_CMD_READ
-
 #endif
 
 #define CONFIG_SERIAL_TAG
 #define CONFIG_FASTBOOT_USB_DEV 0
-
 
 #define CONFIG_USB_MAX_CONTROLLER_COUNT         2
 
