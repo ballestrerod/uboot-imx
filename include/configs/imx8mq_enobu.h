@@ -25,7 +25,7 @@
 #define CONFIG_SPL_BSS_START_ADDR      0x00180000
 #define CONFIG_SPL_BSS_MAX_SIZE        0x2000	/* 8 KB */
 #define CONFIG_SYS_SPL_MALLOC_START    0x42200000
-#define CONFIG_SYS_SPL_MALLOC_SIZE    0x80000	/* 512 KB */
+#define CONFIG_SYS_SPL_MALLOC_SIZE     0x80000	/* 512 KB */
 #define CONFIG_SYS_SPL_PTE_RAM_BASE    0x41580000
 
 /* malloc f used before GD_FLG_FULL_MALLOC_INIT set */
@@ -51,6 +51,7 @@
 #define CONFIG_ETHPRIME                 "FEC"
 
 #define CONFIG_FEC_XCV_TYPE             RGMII
+#define CONFIG_FEC_MXC_PHYADDR          0x18
 #define FEC_QUIRK_ENET_MAC
 #endif
 
@@ -270,7 +271,7 @@
 #endif
 
 #if defined(CONFIG_ANDROID_SUPPORT)
-#include "imx8mq_var_dart_android.h"
+#include "imx8mq_enobu_android.h"
 #endif
 
 #endif
