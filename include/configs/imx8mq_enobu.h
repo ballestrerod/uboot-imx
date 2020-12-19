@@ -75,9 +75,9 @@
 	"fdt_high=0xffffffffffffffff\0"		\
 	"boot_fdt=try\0" \
 	"ip_dyn=yes\0" \
-	"fdt_file=undefined\0" \
+	"fdt_file=imx8mq-enobu-wifi-hdmi.dtb\0" \
 	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
-	"mmcblk=1\0" \
+	"mmcblk=0\0" \
 	"mmcautodetect=yes\0" \
 	"mmcpart=1\0" \
 	"m4_addr=0x7e0000\0" \
@@ -115,16 +115,7 @@
 				"fi; " \
 			"fi; " \
 		"fi;\0" \
-	"findfdt=" \
-		"if test $fdt_file = undefined; then " \
-			"if gpio input 12; then " \
-				"setenv fdt_file imx8mq-var-dart-cb12.dtb; " \
-			"else " \
-				"setenv fdt_file imx8mq-var-dart.dtb;" \
-			"fi; " \
-		"fi; \0" \
-	"loadfdt=run findfdt; " \
-		"echo fdt_file=${fdt_file}; " \
+	"loadfdt=echo fdt_file=${fdt_file}; " \
 		"load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${bootdir}/${fdt_file}\0" \
 	"mmcboot=echo Booting from mmc ...; " \
 		"run mmcargs; " \
@@ -150,7 +141,6 @@
 		"${get_cmd} ${img_addr} ${image}; unzip ${img_addr} ${loadaddr};" \
 		"run netargs; " \
 		"run optargs; " \
-		"run findfdt; " \
 		"echo fdt_file=${fdt_file}; " \
 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
 			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
@@ -161,6 +151,25 @@
 		"else " \
 			"booti; " \
 		"fi;\0" \
+        "ipaddr=192.168.0.5\0" \
+        "netmask=255.255.255.0\0" \
+        "serverip=192.168.0.15\0" \
+        "dtb_addr=0x40480000\0"	\
+        "linux_addr=0x404a0000\0" \
+        "rd_addr=0x444a0000\0" \
+        "enobudevel=" \
+                "echo Booting from buddy-devel TFTP...; " \
+                "run mmcargs; " \
+                "run optargs; " \
+                "tftpboot ${fdt_addr} ${fdt_file} && " \
+                "tftpboot ${img_addr} Image.gz && " \
+                "unzip ${img_addr} ${loadaddr} && " \
+                "booti ${loadaddr} - ${fdt_addr};\0" \
+        "enobunetboot=" \
+                "tftpboot ${dtb_addr} fsl-imx8mq-enobu-emmc-wifi-hdmi.dtb; " \
+                "tftpboot ${linux_addr} Image; " \
+                "tftpboot ${rd_addr} initramfs.ub; " \
+                "booti ${linux_addr} ${rd_addr} ${dtb_addr}\0" \
 	"splashsourceauto=yes\0" \
 	"splashfile=/boot/splash.bmp\0" \
 	"splashimage=0x43100000\0" \
@@ -179,7 +188,7 @@
 		   "else " \
 			   "if run loadimage; then " \
 				   "run mmcboot; " \
-			   "else run netboot; " \
+			   "else run enobudevel; " \
 			   "fi; " \
 		   "fi; " \
 	   "else booti ${loadaddr} - ${fdt_addr}; fi"
