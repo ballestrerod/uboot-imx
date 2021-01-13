@@ -66,15 +66,6 @@ static int setup_fec(void)
 }
 #endif
 
-
-
-int usb_gadget_handle_interrupts(void)
-{
-	dwc3_uboot_handle_interrupt(0);
-	return 0;
-}
-
-
 #ifdef CONFIG_USB_DWC3
 
 #define USB_PHY_CTRL0			0xF0040
@@ -97,6 +88,12 @@ static struct dwc3_device dwc3_device_data = {
 	.index = 0,
 	.power_down_scale = 2,
 };
+
+int usb_gadget_handle_interrupts(void)
+{
+	dwc3_uboot_handle_interrupt(0);
+	return 0;
+}
 
 static void dwc3_nxp_usb_phy_init(struct dwc3_device *dwc3)
 {
@@ -147,7 +144,6 @@ int board_usb_cleanup(int index, enum usb_init_type init)
 	return 0;
 }
 #endif
-
 
 int board_init(void)
 {
