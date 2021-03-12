@@ -62,24 +62,9 @@
 	"initrd_high=0xffffffffffffffff\0" \
 	"emmc_dev=0\0"\
 	"sd_dev=1\0" \
-
-/* Initial environment variables */
-#define CONFIG_EXTRA_ENV_SETTINGS		\
-	CONFIG_MFG_ENV_SETTINGS \
-	"bootdir=/boot\0"	\
-	"script=boot.scr\0" \
-	"image=Image.gz\0" \
-	"console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200\0" \
-	"img_addr=0x42000000\0"			\
-	"fdt_addr=0x43000000\0"			\
-	"fdt_high=0xffffffffffffffff\0"		\
-	"boot_fdt=try\0" \
-	"ip_dyn=yes\0" \
-	"fdt_file=imx8mq-enobu-wifi-hdmi.dtb\0" \
-	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
-	"mmcblk=0\0" \
-	"mmcautodetect=yes\0" \
-	"mmcpart=1\0" \
+/*
+#define CONFIG_M4_ENV_SETTINGS \
+	"bootdir=/boot\0" \
 	"m4_addr=0x7e0000\0" \
 	"m4_bin=hello_world.bin\0" \
 	"use_m4=no\0" \
@@ -93,13 +78,39 @@
 			"dcache flush; " \
 		"fi; " \
 		"bootaux ${m4_addr};\0" \
+*/
+
+/* Initial environment variables */
+#define CONFIG_EXTRA_ENV_SETTINGS \
+	CONFIG_MFG_ENV_SETTINGS \
+	"script=__enobu-boot.scr\0" \
+	"image=Image.gz\0" \
+	"bootmode=normal\0" \
+	"console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200\0" \
+	"img_addr=0x42000000\0"			\
+	"fdt_addr=0x43000000\0"			\
+	"fdt_high=0xffffffffffffffff\0"		\
+	"boot_fdt=try\0" \
+        "ipaddr=192.168.0.5\0" \
+        "netmask=255.255.255.0\0" \
+        "serverip=192.168.0.15\0" \
+        "dtb_addr=0x40480000\0"	\
+        "linux_addr=0x404a0000\0" \
+        "rd_addr=0x444a0000\0" \
+	"fdt_file=imx8mq-enobu-wifi-hdmi.dtb\0" \
+	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
+	"mmcblk=0\0" \
+	"mmcautodetect=yes\0" \
+	"mmcloader=1\0" \
+	"mmcpart=2\0" \
+	"mmcroot=3\0" \
 	"optargs=setenv bootargs ${bootargs} ${kernelargs};\0" \
 	"mmcargs=setenv bootargs console=${console} " \
-		"root=/dev/mmcblk${mmcblk}p${mmcpart} rootwait rw ${cma_size}\0" \
-	"loadbootscript=load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${bootdir}/${script};\0" \
+		"root=/dev/mmcblk${mmcblk}p${mmcroot} rootwait rw ${cma_size}\0" \
+	"loadbootscript=load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
 	"bootscript=echo Running bootscript from mmc ...; " \
 		"source\0" \
-	"loadimage=load mmc ${mmcdev}:${mmcpart} ${img_addr} ${bootdir}/${image};" \
+	"loadimage=load mmc ${mmcdev}:${mmcpart} ${img_addr} ${image};" \
 		"unzip ${img_addr} ${loadaddr}\0" \
 	"ramsize_check="\
 		"if test $sdram_size -le 512; then " \
@@ -116,7 +127,7 @@
 			"fi; " \
 		"fi;\0" \
 	"loadfdt=echo fdt_file=${fdt_file}; " \
-		"load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${bootdir}/${fdt_file}\0" \
+		"load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
 	"mmcboot=echo Booting from mmc ...; " \
 		"run mmcargs; " \
 		"run optargs; " \
@@ -129,34 +140,6 @@
 		"else " \
 			"echo wait for boot; " \
 		"fi;\0" \
-	"netargs=setenv bootargs console=${console} " \
-		"root=/dev/nfs ${cma_size} " \
-		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
-	"netboot=echo Booting from net ...; " \
-		"if test ${ip_dyn} = yes; then " \
-			"setenv get_cmd dhcp; " \
-		"else " \
-			"setenv get_cmd tftp; " \
-		"fi; " \
-		"${get_cmd} ${img_addr} ${image}; unzip ${img_addr} ${loadaddr};" \
-		"run netargs; " \
-		"run optargs; " \
-		"echo fdt_file=${fdt_file}; " \
-		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
-			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
-				"booti ${loadaddr} - ${fdt_addr}; " \
-			"else " \
-				"echo WARN: Cannot load the DT; " \
-			"fi; " \
-		"else " \
-			"booti; " \
-		"fi;\0" \
-        "ipaddr=192.168.0.5\0" \
-        "netmask=255.255.255.0\0" \
-        "serverip=192.168.0.15\0" \
-        "dtb_addr=0x40480000\0"	\
-        "linux_addr=0x404a0000\0" \
-        "rd_addr=0x444a0000\0" \
         "enobudevel=" \
                 "echo Booting from buddy-devel TFTP...; " \
                 "run mmcargs; " \
@@ -165,11 +148,11 @@
                 "tftpboot ${img_addr} Image.gz && " \
                 "unzip ${img_addr} ${loadaddr} && " \
                 "booti ${loadaddr} - ${fdt_addr};\0" \
-        "enobunetboot=" \
-                "tftpboot ${dtb_addr} fsl-imx8mq-enobu-emmc-wifi-hdmi.dtb; " \
-                "tftpboot ${linux_addr} Image; " \
-                "tftpboot ${rd_addr} initramfs.ub; " \
-                "booti ${linux_addr} ${rd_addr} ${dtb_addr}\0" \
+	"enobuloaderboot=" \
+		"load mmc ${mmcdev}:${mmcloader} ${dtb_addr} _enobu_dtb; " \
+		"load mmc ${mmcdev}:${mmcloader} ${linux_addr} _enobu_loader; " \
+		"load mmc ${mmcdev}:${mmcloader} ${rd_addr} _enobu_initramfs; " \
+		"booti ${linux_addr} ${rd_addr} ${dtb_addr};\0" \
 	"splashsourceauto=yes\0" \
 	"splashfile=/boot/splash.bmp\0" \
 	"splashimage=0x43100000\0" \
@@ -179,19 +162,13 @@
 
 #define CONFIG_BOOTCOMMAND \
 	   "run ramsize_check; " \
-	   "mmc dev ${mmcdev}; if mmc rescan; then " \
-		   "if test ${use_m4} = yes && run loadm4bin; then " \
-			   "run runm4bin; " \
-		   "fi; " \
-		   "if run loadbootscript; then " \
-			   "run bootscript; " \
-		   "else " \
-			   "if run loadimage; then " \
-				   "run mmcboot; " \
-			   "else run enobudevel; " \
-			   "fi; " \
-		   "fi; " \
-	   "else booti ${loadaddr} - ${fdt_addr}; fi"
+	   "if test ${bootmode} = normal; then " \
+	   	"mmc dev ${mmcdev}; if mmc rescan; then " \
+	   	"else booti ${loadaddr} - ${fdt_addr}; fi; " \
+	   "elif test ${bootmode} = swupdate; then " \
+	   	"run enobuloaderboot; " \
+	   "fi; "
+
 
 /* Link Definitions */
 #define CONFIG_LOADADDR			0x40480000
