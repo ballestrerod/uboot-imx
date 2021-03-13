@@ -164,6 +164,14 @@
 	   "run ramsize_check; " \
 	   "if test ${bootmode} = normal; then " \
 	   	"mmc dev ${mmcdev}; if mmc rescan; then " \
+			"if run loadbootscript; then " \
+				"run bootscript; " \
+			"else " \
+				"if run loadimage; then " \
+					"run mmcboot; " \
+				"else run enobudevel; " \
+				"fi; " \
+			"fi; " \
 	   	"else booti ${loadaddr} - ${fdt_addr}; fi; " \
 	   "elif test ${bootmode} = swupdate; then " \
 	   	"run enobuloaderboot; " \
